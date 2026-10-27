@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ANISH EXPLOITS - OSINT INFO</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family:'Noto Sans Devanagari','Segoe UI',Arial,sans-serif;
+  background:#f0f2f5; min-height:100vh; display:flex; flex-direction:column;
+  align-items:center; overflow-x:hidden;
+  -webkit-user-select:none; user-select:none; -webkit-touch-callout:none;
+}
+input,textarea{-webkit-user-select:text;user-select:text;}
+
+/* DISCLAIMER */
+.disclaimer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:9999;display:flex;justify-content:center;align-items:center;backdrop-filter:blur(12px);}
+.disclaimer-overlay.hidden{opacity:0;visibility:hidden;transition:all .8s ease;}
+.disclaimer-overlay.hide-permanent{display:none!important;}
+.disclaimer-box{background:linear-gradient(145deg,#0a0a2a,#15154a);border:2px solid #FF9933;border-radius:24px;padding:45px 40px;max-width:520px;width:92%;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:popIn .6s cubic-bezier(.175,.885,.32,1.275);position:relative;overflow:hidden;}
+@keyframes popIn{0%{transform:scale(.85) translateY(40px);opacity:0;}100%{transform:scale(1) translateY(0);opacity:1;}}
+.disclaimer-box .icon-big{font-size:60px;margin-bottom:10px;display:block;}
+.disclaimer-box .brand-name{color:#FF9933;font-size:14px;font-weight:700;letter-spacing:3px;text-transform:uppercase;}
+.disclaimer-box h2{color:#FFF;font-size:24px;font-weight:800;margin:5px 0 10px;}
+.disclaimer-box .divider{width:60px;height:2px;background:linear-gradient(90deg,transparent,#FF9933,transparent);margin:10px auto;border-radius:10px;}
+.disclaimer-box .content{color:rgba(255,255,255,.7);font-size:14px;line-height:1.9;margin-bottom:20px;}
+.disclaimer-box .content strong{color:#FF9933;}
+.disclaimer-box .btn-accept{padding:14px 50px;background:linear-gradient(135deg,#FF9933,#e68a00);border:none;border-radius:50px;color:#fff;font-size:16px;font-weight:700;cursor:pointer;transition:.3s;font-family:inherit;}
+.disclaimer-box .btn-accept:hover{transform:scale(1.05);box-shadow:0 12px 40px rgba(255,153,51,.4);}
+.disclaimer-box .btn-accept i{margin-right:10px;}
+
+/* TRICOLOR */
+.tricolor-bar{width:100%;height:6px;display:flex;position:fixed;top:0;left:0;z-index:1000;}
+.tricolor-bar .saffron{width:33.33%;background:#FF9933;}
+.tricolor-bar .white{width:33.33%;background:#FFF;}
+.tricolor-bar .green{width:33.34%;background:#138808;}
+
+/* TOP HEADER */
+.top-header{width:100%;background:#0a0a2a;padding:10px 0;margin-top:6px;border-bottom:2px solid #FF9933;position:sticky;top:6px;z-index:999;}
+.top-header .container{max-width:1200px;margin:0 auto;padding:0 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+.top-header .gov-text{color:#FF9933;font-size:12px;font-weight:700;letter-spacing:1.5px;}
+.top-header .gov-text i{margin-right:8px;color:#FFF;}
+.top-header .gov-text span{color:#FFF;margin:0 10px;}
+.top-header .helpline{color:#FFF;font-size:12px;font-weight:500;background:rgba(255,153,51,.1);padding:4px 16px;border-radius:20px;border:1px solid rgba(255,153,51,.15);}
+.top-header .helpline i{color:#FF9933;margin-right:8px;}
+
+/* MAIN HEADER */
+.main-header{width:100%;background:linear-gradient(135deg,#0a0a2a 0%,#1a1a5a 50%,#0a0a2a 100%);padding:20px 0;border-bottom:3px solid #138808;box-shadow:0 4px 20px rgba(0,0,0,.15);}
+.main-header .container{max-width:1200px;margin:0 auto;padding:0 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;}
+.main-header .logo-section{display:flex;align-items:center;gap:18px;}
+.main-header .logo-img{width:65px;height:65px;border-radius:50%;border:2px solid rgba(255,153,51,.3);object-fit:cover;animation:logoFloat 3s ease-in-out infinite;background:rgba(255,255,255,.05);padding:3px;pointer-events:none;}
+@keyframes logoFloat{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-3px) scale(1.03);}}
+.main-header .title-section h1{color:#FFF;font-size:26px;font-weight:800;letter-spacing:.5px;}
+.main-header .title-section h1 .brand{color:#FF9933;font-weight:800;}
+.main-header .title-section .sub-title{color:rgba(255,255,255,.4);font-size:12px;letter-spacing:3px;font-weight:400;text-transform:uppercase;}
+.main-header .status-badge{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.05);padding:8px 20px;border-radius:30px;border:1px solid rgba(255,255,255,.06);}
+.main-header .status-badge .dot{width:8px;height:8px;border-radius:50%;background:#00ff66;animation:dotPulse 1.5s ease-in-out infinite;}
+@keyframes dotPulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.3;transform:scale(.5);}}
+.main-header .status-badge span{color:rgba(255,255,255,.4);font-size:11px;font-weight:500;letter-spacing:1px;}
+
+/* MAIN */
+.main-container{max-width:600px;width:100%;padding:25px 20px;margin:25px 0 40px;}
+.card{background:#FFF;border-radius:20px;box-shadow:0 8px 40px rgba(0,0,0,.06);overflow:hidden;border:1px solid rgba(0,0,0,.04);}
+.card-header{background:linear-gradient(135deg,#0a0a2a,#1a1a5a);padding:25px 30px;border-bottom:3px solid #FF9933;text-align:center;position:relative;overflow:hidden;}
+.card-header .badge-gov{display:inline-block;background:rgba(255,153,51,.12);padding:5px 20px;border-radius:30px;border:1px solid rgba(255,153,51,.15);color:#FF9933;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;}
+.card-header .badge-gov i{margin-right:6px;}
+.card-header .logo-icon{width:75px;height:75px;border-radius:50%;border:2px solid rgba(255,153,51,.2);object-fit:cover;margin:0 auto 12px;display:block;animation:iconFloat 4s ease-in-out infinite;background:rgba(255,255,255,.05);padding:3px;pointer-events:none;}
+@keyframes iconFloat{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-5px) scale(1.05);}}
+.card-header .card-title{color:#FFF;font-size:28px;font-weight:800;letter-spacing:1px;}
+.card-header .card-title .highlight{color:#FF9933;}
+.card-header .card-subtitle{color:rgba(255,255,255,.35);font-size:13px;letter-spacing:2px;margin-top:6px;}
+.card-header .card-subtitle i{color:#00ff66;margin-right:6px;}
+.card-body{padding:30px;}
+
+/* TABS */
+.tabs{display:flex;gap:8px;margin-bottom:22px;background:#f0f2f5;padding:6px;border-radius:12px;}
+.tab{flex:1;padding:12px 6px;text-align:center;border:none;background:transparent;border-radius:8px;font-size:12px;font-weight:700;color:#888;cursor:pointer;transition:.3s;font-family:inherit;letter-spacing:.5px;}
+.tab i{display:block;font-size:18px;margin-bottom:4px;}
+.tab.active{background:#FFF;color:#FF9933;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.tab-pane{display:none;}
+.tab-pane.active{display:block;animation:slideUp .4s ease;}
+@keyframes slideUp{0%{opacity:0;transform:translateY(10px);}100%{opacity:1;transform:translateY(0);}}
+
+/* FORM */
+.form-group{margin-bottom:18px;}
+.form-label{display:block;font-size:12px;font-weight:700;color:#333;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;}
+.form-label i{color:#FF9933;margin-right:8px;}
+.input-group{display:flex;align-items:center;background:#f8f9fa;border:2px solid #e0e0e0;border-radius:12px;transition:all .3s ease;overflow:hidden;}
+.input-group:focus-within{border-color:#FF9933;box-shadow:0 0 0 4px rgba(255,153,51,.08);background:#fff;}
+.input-group .country-code{padding:14px 14px 14px 20px;color:#333;font-weight:700;font-size:15px;background:rgba(0,0,0,.02);border-right:1px solid #e0e0e0;}
+.input-group input{flex:1;padding:14px 18px;background:transparent;border:none;color:#333;font-size:17px;outline:none;font-family:inherit;font-weight:500;letter-spacing:1.5px;min-width:0;}
+.input-group input::placeholder{color:#aaa;font-weight:400;font-size:14px;letter-spacing:.5px;}
+
+/* STATUS */
+.status-bar{display:flex;align-items:center;gap:12px;padding:6px 0 14px;font-size:12px;color:#888;font-weight:500;}
+.status-bar .dot{width:7px;height:7px;border-radius:50%;background:#138808;animation:pulseDot 1.5s infinite;}
+@keyframes pulseDot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.2;transform:scale(.4);}}
+.status-bar .dot.error{background:#dc3545;}
+
+/* BUTTON */
+.btn-search{width:100%;padding:16px;background:linear-gradient(135deg,#FF9933,#e68a00);border:none;border-radius:12px;color:#fff;font-size:17px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:1.5px;transition:all .3s ease;display:flex;justify-content:center;align-items:center;gap:12px;position:relative;overflow:hidden;}
+.btn-search:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 12px 40px rgba(255,153,51,.25);}
+.btn-search:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+.btn-search i{font-size:18px;}
+
+/* RESULT */
+.result-box{margin-top:25px;border:1px solid #e8e8e8;border-radius:14px;overflow:hidden;display:none;background:#fafbfc;}
+.result-box.show{display:block;animation:slideUp .5s cubic-bezier(.175,.885,.32,1.275);}
+.result-header{background:#f0f1f3;padding:12px 20px;border-bottom:1px solid #e0e0e0;display:flex;justify-content:space-between;align-items:center;}
+.result-header .title{font-size:12px;font-weight:700;color:#333;text-transform:uppercase;letter-spacing:1px;}
+.result-header .title i{color:#FF9933;margin-right:8px;}
+.result-header .count{font-size:11px;color:#666;background:#e8e8e8;padding:3px 14px;border-radius:20px;font-weight:600;}
+.result-item{display:flex;padding:14px 20px;border-bottom:1px solid #f0f0f0;transition:.2s;}
+.result-item:hover{background:#f8f9fa;}
+.result-item:last-child{border-bottom:none;}
+.result-item .label{color:#777;font-size:11px;font-weight:700;width:32%;display:flex;align-items:center;gap:10px;text-transform:uppercase;letter-spacing:.8px;}
+.result-item .label i{font-size:14px;color:#FF9933;width:18px;}
+.result-item .value{color:#222;font-size:14px;font-weight:500;width:68%;text-align:right;word-break:break-word;}
+.result-item .value.highlight{color:#e68a00;font-weight:700;}
+.result-item .value.green{color:#138808;font-weight:700;}
+.result-item .value.address{font-size:13px;color:#555;line-height:1.5;}
+
+/* SOCIAL */
+.social-section{margin-top:18px;padding:18px;background:#f8f9fa;border-radius:12px;text-align:center;border:1px solid #e8e8e8;}
+.social-section .social-title{font-size:11px;color:#777;margin-bottom:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;}
+.social-section .social-title i{color:#FF9933;margin-right:8px;}
+.social-buttons{display:flex;justify-content:center;gap:15px;flex-wrap:wrap;}
+.social-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:50px;text-decoration:none;color:#fff;font-size:13px;font-weight:600;transition:.3s;font-family:inherit;}
+.social-btn:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,.15);}
+.social-btn i{font-size:18px;}
+.social-btn.youtube{background:#FF0000;}
+.social-btn.instagram{background:linear-gradient(135deg,#833AB4,#FD1D1D,#F56040);}
+.social-btn.telegram{background:#0088cc;}
+
+/* JSON */
+.json-toggle{margin-top:14px;padding:12px;background:transparent;border:1px solid #e0e0e0;border-radius:10px;color:#888;font-size:11px;font-weight:500;cursor:pointer;width:100%;transition:.3s;display:flex;justify-content:center;align-items:center;gap:8px;font-family:inherit;}
+.json-toggle:hover{background:#f8f9fa;border-color:#FF9933;color:#FF9933;}
+.json-box{margin-top:12px;background:#0a0a0a;border-radius:10px;padding:14px;font-family:'Courier New',monospace;font-size:10px;color:#00ff66;display:none;max-height:200px;overflow:auto;white-space:pre-wrap;word-break:break-all;line-height:1.8;}
+.json-box.show{display:block;}
+
+/* ERROR */
+.error-text{color:#dc3545;font-size:12px;padding:6px 0;display:none;font-weight:500;}
+.error-text.show{display:block;animation:shake .4s ease;}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+
+/* FOOTER */
+.footer-section{width:100%;background:#0a0a2a;border-top:3px solid #FF9933;padding:25px 0;margin-top:20px;}
+.footer-section .container{max-width:1200px;margin:0 auto;padding:0 20px;text-align:center;}
+.footer-section .footer-links{display:flex;justify-content:center;gap:25px;flex-wrap:wrap;margin-bottom:18px;}
+.footer-section .footer-links a{color:rgba(255,255,255,.25);font-size:11px;text-decoration:none;transition:.3s;letter-spacing:.5px;font-weight:500;}
+.footer-section .footer-links a:hover{color:#FF9933;}
+.footer-section .copyright{color:rgba(255,255,255,.08);font-size:10px;letter-spacing:2px;font-weight:300;}
+.footer-section .copyright .brand-name{color:#FF9933;font-weight:600;}
+.footer-section .tricolor-footer{width:100%;height:4px;display:flex;margin-top:18px;}
+.footer-section .tricolor-footer .saffron{width:33.33%;background:#FF9933;}
+.footer-section .tricolor-footer .white{width:33.33%;background:#FFF;}
+.footer-section .tricolor-footer .green{width:33.34%;background:#138808;}
+
+@media(max-width:768px){
+  .main-header .title-section h1{font-size:18px;}
+  .main-header .title-section .sub-title{font-size:9px;letter-spacing:1.5px;}
+  .main-header .logo-img{width:50px;height:50px;}
+  .top-header .gov-text{font-size:10px;}
+  .top-header .helpline{font-size:10px;padding:3px 12px;}
+  .card-header .card-title{font-size:22px;}
+  .card-body{padding:20px;}
+  .card-header{padding:20px;}
+  .result-item{flex-wrap:wrap;padding:12px 16px;}
+  .result-item .label{width:100%;margin-bottom:4px;}
+  .result-item .value{width:100%;text-align:left;}
+  .social-btn{padding:8px 16px;font-size:12px;}
+  .disclaimer-box{padding:30px 22px;}
+  .disclaimer-box h2{font-size:20px;}
+}
+@media(max-width:480px){
+  .main-header .title-section h1{font-size:15px;}
+  .main-header .logo-img{width:42px;height:42px;}
+  .card-header .card-title{font-size:18px;}
+  .main-container{padding:15px 12px;}
+  .card-body{padding:16px;}
+  .tab{font-size:10px;}
+  .tab i{font-size:15px;}
+}
+img,svg,video{-webkit-user-drag:none;pointer-events:none;}
+</style>
+</head>
+<body>
+
+<div class="disclaimer-overlay" id="disclaimerOverlay">
+  <div class="disclaimer-box">
+    <span class="icon-big">🛡️</span>
+    <div class="brand-name">ANISH EXPLOITS</div>
+    <h2>DISCLAIMER</h2>
+    <div class="divider"></div>
+    <div class="content">
+      This tool is for <strong>educational and security awareness</strong> purposes only.<br>
+      All data is obtained from <strong>publicly available sources</strong>.<br><br>
+      <i class="fas fa-link" style="color:#FF9933;"></i> Use responsibly &amp; ethically.
+    </div>
+    <button class="btn-accept" onclick="acceptDisclaimer()"><i class="fas fa-check-circle"></i> I UNDERSTAND</button>
+  </div>
+</div>
+
+<div class="tricolor-bar"><div class="saffron"></div><div class="white"></div><div class="green"></div></div>
+
+<div class="top-header">
+  <div class="container">
+    <div class="gov-text"><i class="fas fa-shield-halved"></i> ANISH EXPLOITS <span>|</span> CYBER SECURITY DIVISION</div>
+    <div class="helpline"><i class="fas fa-phone"></i> <strong>Helpline: +91 6209865775</strong></div>
+  </div>
+</div>
+
+<div class="main-header">
+  <div class="container">
+    <div class="logo-section">
+      <img src="https://i.postimg.cc/1VBJWPhR/IMG-20260724-232723-958.webp" alt="Logo" class="logo-img" draggable="false">
+      <div class="title-section">
+        <h1><span class="brand">ANISH</span> EXPLOITS</h1>
+        <div class="sub-title">🔴 OSINT · SECURITY RESEARCH · INTELLIGENCE</div>
+      </div>
+    </div>
+    <div class="status-badge"><div class="dot"></div><span>SYSTEM ACTIVE</span></div>
+  </div>
+</div>
+
+<div class="main-container">
+  <div class="card">
+    <div class="card-header">
+      <div class="badge-gov"><i class="fas fa-lock"></i> SECURE · ENCRYPTED</div>
+      <img src="https://i.postimg.cc/1VBJWPhR/IMG-20260724-232723-958.webp" alt="Logo" class="logo-icon" draggable="false">
+      <div class="card-title"><span class="highlight">OSINT</span> INFORMATION</div>
+      <div class="card-subtitle"><i class="fas fa-shield"></i> Number · Aadhaar · Vehicle</div>
+    </div>
+
+    <div class="card-body">
+
+      <!-- TABS -->
+      <div class="tabs">
+        <button class="tab active" data-tab="number" onclick="switchTab('number')"><i class="fas fa-phone"></i>Number</button>
+        <button class="tab" data-tab="aadhar" onclick="switchTab('aadhar')"><i class="fas fa-id-card"></i>Aadhaar</button>
+        <button class="tab" data-tab="vehicle" onclick="switchTab('vehicle')"><i class="fas fa-car"></i>Vehicle</button>
+      </div>
+
+      <!-- NUMBER TAB -->
+      <div class="tab-pane active" id="pane-number">
+        <form onsubmit="event.preventDefault();searchNumber();">
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-phone"></i> Enter 10-Digit Mobile Number</label>
+            <div class="input-group">
+              <span class="country-code">+91</span>
+              <input type="tel" id="phoneInput" placeholder="Enter phone number" maxlength="10" inputmode="numeric">
+            </div>
+          </div>
+          <div class="status-bar"><span class="dot" id="statusDot1"></span><span id="statusText1">Ready to track</span></div>
+          <div class="error-text" id="errorText1">❌ Error</div>
+          <button type="submit" class="btn-search" id="btnNumber"><i class="fas fa-search"></i> GET NUMBER INFO</button>
+        </form>
+        <div class="result-box" id="resultNumber">
+          <div class="result-header"><div class="title"><i class="fas fa-file-alt"></i> Number Information</div><div class="count"><i class="fas fa-database"></i> <span id="countNumber">0</span></div></div>
+          <div id="contentNumber"></div>
+        </div>
+      </div>
+
+      <!-- AADHAR TAB -->
+      <div class="tab-pane" id="pane-aadhar">
+        <form onsubmit="event.preventDefault();searchAadhar();">
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-id-card"></i> Enter 12-Digit Aadhaar Number</label>
+            <div class="input-group">
+              <input type="tel" id="aadharInput" placeholder="Enter aadhaar number" maxlength="12" inputmode="numeric" style="padding-left:20px;">
+            </div>
+          </div>
+          <div class="status-bar"><span class="dot" id="statusDot2"></span><span id="statusText2">Ready to track</span></div>
+          <div class="error-text" id="errorText2">❌ Error</div>
+          <button type="submit" class="btn-search" id="btnAadhar"><i class="fas fa-search"></i> GET AADHAAR INFO</button>
+        </form>
+        <div class="result-box" id="resultAadhar">
+          <div class="result-header"><div class="title"><i class="fas fa-file-alt"></i> Aadhaar Information</div><div class="count"><i class="fas fa-database"></i> <span id="countAadhar">0</span></div></div>
+          <div id="contentAadhar"></div>
+        </div>
+      </div>
+
+      <!-- VEHICLE TAB -->
+      <div class="tab-pane" id="pane-vehicle">
+        <form onsubmit="event.preventDefault();searchVehicle();">
+          <div class="form-group">
+            <label class="form-label"><i class="fas fa-car"></i> Enter Vehicle Number</label>
+            <div class="input-group">
+              <input type="text" id="vehicleInput" placeholder="e.g. UP52AK5256" maxlength="15" style="padding-left:20px;text-transform:uppercase;letter-spacing:2px;">
+            </div>
+          </div>
+          <div class="status-bar"><span class="dot" id="statusDot3"></span><span id="statusText3">Ready to track</span></div>
+          <div class="error-text" id="errorText3">❌ Error</div>
+          <button type="submit" class="btn-search" id="btnVehicle"><i class="fas fa-search"></i> GET VEHICLE INFO</button>
+        </form>
+        <div class="result-box" id="resultVehicle">
+          <div class="result-header"><div class="title"><i class="fas fa-file-alt"></i> Vehicle Information</div><div class="count"><i class="fas fa-database"></i> <span id="countVehicle">0</span></div></div>
+          <div id="contentVehicle"></div>
+        </div>
+      </div>
+
+      <!-- SOCIAL -->
+      <div class="social-section">
+        <div class="social-title"><i class="fas fa-share-alt"></i> Connect With Anish Exploits</div>
+        <div class="social-buttons">
+          <a href="https://youtube.com/@anishexploits?si=SX_OcP538BBOqM6R" target="_blank" class="social-btn youtube"><i class="fab fa-youtube"></i> YouTube</a>
+          <a href="https://instagram.com/anish_exploits" target="_blank" class="social-btn instagram"><i class="fab fa-instagram"></i> Instagram</a>
+          <a href="https://t.me/Anish_Exploits" target="_blank" class="social-btn telegram"><i class="fab fa-telegram-plane"></i> Telegram</a>
+        </div>
+      </div>
+
+      <button class="json-toggle" onclick="toggleJson()"><i class="fas fa-code"></i> View Raw Data (JSON)</button>
+      <div class="json-box" id="jsonBox"></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer-section">
+  <div class="container">
+    <div class="footer-links">
+      <a href="#"><i class="fas fa-info-circle"></i> About</a>
+      <a href="#"><i class="fas fa-shield-halved"></i> Privacy</a>
+      <a href="#"><i class="fas fa-gavel"></i> Terms</a>
+      <a href="https://t.me/Anish_Exploits" target="_blank"><i class="fas fa-headset"></i> Support</a>
+      <a href="tel:+916209856775"><i class="fas fa-phone"></i> Contact</a>
+    </div>
+    <div class="copyright">© 2024 <span class="brand-name">Anish Exploits</span> · All Rights Reserved</div>
+    <div class="tricolor-footer"><div class="saffron"></div><div class="white"></div><div class="green"></div></div>
+  </div>
+</div>
+
+<script>
+/* ========== API CONFIG ========== */
+const API_BASE = "https://cyberteam-g6aw.onrender.com";
+const API_KEY  = "h4xsensi";
+const CORS_PROXY = "https://api.allorigins.win/raw?url=";
+
+/* ========== DISCLAIMER ========== */
+(function(){
+  if(sessionStorage.getItem('disclaimerShown')==='true'){
+    document.getElementById('disclaimerOverlay').classList.add('hide-permanent');
+  }
+})();
+function acceptDisclaimer(){
+  sessionStorage.setItem('disclaimerShown','true');
+  const o=document.getElementById('disclaimerOverlay');
+  o.classList.add('hidden');
+  setTimeout(()=>o.classList.add('hide-permanent'),800);
+}
+
+/* ========== TABS ========== */
+function switchTab(tab){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelector(`.tab[data-tab="${tab}"]`).classList.add('active');
+  document.getElementById('pane-'+tab).classList.add('active');
+}
+
+/* ========== JSON TOGGLE ========== */
+function toggleJson(){
+  document.getElementById('jsonBox').classList.toggle('show');
+}
+
+/* ========== FETCH HELPER (CORS Fallback) ========== */
+async function fetchAPI(url) {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Network error');
+    return await res.json();
+  } catch (err) {
+    console.log('Direct fetch failed, trying proxy...');
+    const res = await fetch(CORS_PROXY + encodeURIComponent(url));
+    return await res.json();
+  }
+}
+
+/* ========== HELPERS ========== */
+function setStatus(idx, ok, text){
+  const dot=document.getElementById('statusDot'+idx);
+  const txt=document.getElementById('statusText'+idx);
+  dot.className='dot'+(ok?'':' error');
+  txt.textContent=text;
+}
+function showError(idx, msg){
+  const e=document.getElementById('errorText'+idx);
+  e.textContent='❌ '+msg;
+  e.classList.add('show');
+}
+function hideError(idx){
+  document.getElementById('errorText'+idx).classList.remove('show');
+}
+function btnLoad(btnId, loading, text){
+  const b=document.getElementById(btnId);
+  b.disabled=loading;
+  if(loading) {
+    b.innerHTML = '<i class="fas fa-spinner fa-spin"></i> SEARCHING...';
+  } else {
+    b.innerHTML = `<i class="fas fa-search"></i> GET ${text} INFO`;
+  }
+}
+function renderRows(rows){
+  let html='';
+  rows.forEach(r=>{
+    if(!r.value || r.value === 'null' || r.value === 'N/A') return; // Hide empty fields
+    const icon = r.icon || 'fa-circle-info';
+    const cls  = r.cls  || '';
+    html += `<div class="result-item">
+      <span class="label"><i class="fas ${icon}"></i> ${r.label}</span>
+      <span class="value ${cls}">${r.value}</span>
+    </div>`;
+  });
+  return html || '<div style="padding:15px;text-align:center;color:#888;">No valid data fields found.</div>';
+}
+
+/* ========== NUMBER ========== */
+async function searchNumber(){
+  const num = document.getElementById('phoneInput').value.trim();
+  const box = document.getElementById('resultNumber');
+  const content = document.getElementById('contentNumber');
+  const count = document.getElementById('countNumber');
+  hideError(1); box.classList.remove('show');
+
+  if(!/^[0-9]{10}$/.test(num)){
+    showError(1,'Please enter a valid 10-digit number!'); return;
+  }
+  btnLoad('btnNumber', true); setStatus(1, true, '🔍 Searching...');
+
+  try{
+    const url = `${API_BASE}/api/number?key=${API_KEY}&num=${num}`;
+    const data = await fetchAPI(url);
+    document.getElementById('jsonBox').textContent = JSON.stringify(data,null,2);
+
+    const list = data.data || data.result || (Array.isArray(data)?data:[]);
+    if(!list || list.length===0){
+      setStatus(1, false, '❌ No data found');
+      showError(1, data.message || 'No data found for this number'); return;
+    }
+    const info = list[0];
+    count.textContent = list.length;
+    
+    // Fields mapping based on typical API response
+    content.innerHTML = renderRows([
+      {icon:'fa-phone', label:'Phone', value: info.phoneNumber || info.num || num, cls:'highlight'},
+      {icon:'fa-user', label:'Full Name', value: info.name, cls:'highlight'},
+      {icon:'fa-user-tie', label:'Father Name', value: info.fatherName || info.fname},
+      {icon:'fa-id-card', label:'Aadhaar', value: info.aadharNumber || info.aadhar, cls:'green'},
+      {icon:'fa-map-pin', label:'Address', value: info.address, cls:'address'},
+      {icon:'fa-signal', label:'Circle', value: info.circle || info.district || info.state},
+      {icon:'fa-phone-plus', label:'Alternate', value: info.otherNumber || info.alt}
+    ]);
+    
+    box.classList.add('show');
+    setStatus(1, true, '✅ Search completed');
+  }catch(err){
+    console.error(err);
+    setStatus(1, false, '❌ Connection error');
+    showError(1, 'Network error. Please try again.');
+  }
+  btnLoad('btnNumber', false, 'NUMBER');
+}
+
+/* ========== AADHAR ========== */
+async function searchAadhar(){
+  const num = document.getElementById('aadharInput').value.trim();
+  const box = document.getElementById('resultAadhar');
+  const content = document.getElementById('contentAadhar');
+  const count = document.getElementById('countAadhar');
+  hideError(2); box.classList.remove('show');
+
+  if(!/^[0-9]{12}$/.test(num)){
+    showError(2,'Please enter a valid 12-digit Aadhaar number!'); return;
+  }
+  btnLoad('btnAadhar', true); setStatus(2, true, '🔍 Searching...');
+
+  try{
+    const url = `${API_BASE}/api/aadhar?key=${API_KEY}&num=${num}`;
+    const data = await fetchAPI(url);
+    document.getElementById('jsonBox').textContent = JSON.stringify(data,null,2);
+
+    const list = data.data || data.result || (Array.isArray(data)?data:[]);
+    if(!list || list.length===0){
+      setStatus(2, false, '❌ No data found');
+      showError(2, data.message || 'No data found for this Aadhaar'); return;
+    }
+    const info = list[0];
+    count.textContent = list.length;
+    
+    // Fields mapping as per screenshot
+    content.innerHTML = renderRows([
+      {icon:'fa-id-card', label:'Aadhaar', value: info.aadharNumber || num, cls:'green'},
+      {icon:'fa-user', label:'Full Name', value: info.name, cls:'highlight'},
+      {icon:'fa-user-tie', label:'Father Name', value: info.fatherName},
+      {icon:'fa-map-pin', label:'Address', value: info.address, cls:'address'},
+      {icon:'fa-phone', label:'Mobile', value: info.phoneNumber},
+      {icon:'fa-phone-plus', label:'Alternate', value: info.otherNumber}
+    ]);
+    
+    box.classList.add('show');
+    setStatus(2, true, '✅ Search completed');
+  }catch(err){
+    console.error(err);
+    setStatus(2, false, '❌ Connection error');
+    showError(2, 'Network error. Please try again.');
+  }
+  btnLoad('btnAadhar', false, 'AADHAAR');
+}
+
+/* ========== VEHICLE ========== */
+async function searchVehicle(){
+  const vno = document.getElementById('vehicleInput').value.trim().toUpperCase();
+  const box = document.getElementById('resultVehicle');
+  const content = document.getElementById('contentVehicle');
+  const count = document.getElementById('countVehicle');
+  hideError(3); box.classList.remove('show');
+
+  if(!vno || vno.length < 6){
+    showError(3,'Please enter a valid vehicle number!'); return;
+  }
+  btnLoad('btnVehicle', true); setStatus(3, true, '🔍 Searching...');
+
+  try{
+    // API spelling is 'vechile'
+    const url = `${API_BASE}/api/vechile-info?key=${API_KEY}&vechile=${encodeURIComponent(vno)}`;
+    const data = await fetchAPI(url);
+    document.getElementById('jsonBox').textContent = JSON.stringify(data,null,2);
+
+    const list = data.data || data.result || (Array.isArray(data)?data:[]);
+    if(!list || list.length===0){
+      setStatus(3, false, '❌ No data found');
+      showError(3, data.message || 'No data found for this vehicle'); return;
+    }
+    const info = list[0];
+    count.textContent = list.length;
+    
+    content.innerHTML = renderRows([
+      {icon:'fa-car', label:'Vehicle No', value: info.vehicle_no || info.vechile || info.reg_no || vno, cls:'highlight'},
+      {icon:'fa-user', label:'Owner Name', value: info.owner_name || info.name, cls:'highlight'},
+      {icon:'fa-user-tie', label:'Father Name', value: info.father_name || info.fname},
+      {icon:'fa-map-pin', label:'Address', value: info.address, cls:'address'},
+      {icon:'fa-building', label:'Maker / Model', value: [info.maker, info.model].filter(Boolean).join(' ') || info.vehicle_model},
+      {icon:'fa-calendar', label:'Reg. Date', value: info.reg_date || info.registration_date},
+      {icon:'fa-gas-pump', label:'Fuel', value: info.fuel || info.fuel_type},
+      {icon:'fa-palette', label:'Color', value: info.color},
+      {icon:'fa-shield', label:'Insurance', value: info.insurance || info.insurance_company},
+      {icon:'fa-calendar-check', label:'Insurance Upto', value: info.insurance_upto || info.insurance_expiry},
+      {icon:'fa-id-card', label:'Aadhaar', value: info.aadharNumber || info.aadhar, cls:'green'},
+      {icon:'fa-phone', label:'Mobile', value: info.phoneNumber || info.mobile || info.num}
+    ]);
+    
+    box.classList.add('show');
+    setStatus(3, true, '✅ Search completed');
+  }catch(err){
+    console.error(err);
+    setStatus(3, false, '❌ Connection error');
+    showError(3, 'Network error. Please try again.');
+  }
+  btnLoad('btnVehicle', false, 'VEHICLE');
+}
+
+/* ========== INPUT SANITIZE ========== */
+document.getElementById('phoneInput').addEventListener('input', function(){
+  this.value = this.value.replace(/[^0-9]/g,'');
+});
+document.getElementById('aadharInput').addEventListener('input', function(){
+  this.value = this.value.replace(/[^0-9]/g,'');
+});
+document.getElementById('vehicleInput').addEventListener('input', function(){
+  this.value = this.value.replace(/[^A-Za-z0-9]/g,'').toUpperCase();
+});
+
+/* ========== DISABLE COPY ========== */
+document.addEventListener('contextmenu', e=>e.preventDefault());
+document.addEventListener('dragstart', e=>e.preventDefault());
+</script>
+
+</body>
+</html>
